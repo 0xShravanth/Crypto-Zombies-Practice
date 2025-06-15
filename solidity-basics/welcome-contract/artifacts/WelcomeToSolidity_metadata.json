@@ -7,12 +7,17 @@
 		"abi": [
 			{
 				"inputs": [],
-				"name": "getAccount",
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "getResult",
 				"outputs": [
 					{
-						"internalType": "address",
+						"internalType": "uint256",
 						"name": "",
-						"type": "address"
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "pure",
@@ -32,7 +37,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			".deps/remix-tests/remix_accounts.sol": "TestsAccounts"
+			"solidity-basics/welcome-contract/welcome-to-solidity.sol": "WelcomeToSolidity"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -46,12 +51,12 @@
 		"remappings": []
 	},
 	"sources": {
-		".deps/remix-tests/remix_accounts.sol": {
-			"keccak256": "0xee6a25ab1734af06149f5789227c58d5f795110748f919d418e4929dca1bb5bd",
-			"license": "GPL-3.0",
+		"solidity-basics/welcome-contract/welcome-to-solidity.sol": {
+			"keccak256": "0x6a54809cc1fcd201d6db3dc46f5dd83442ca4959f69462d9bc3c625fc97b88d0",
+			"license": "MIT",
 			"urls": [
-				"bzz-raw://1300c100b53bce4bc18e46a1e985a483e46216440c47564413adcf6b8f77c088",
-				"dweb:/ipfs/QmYhpDhYjLEza32isrfxBrTBCog1ohy8K2iLpZ2mWS6Djs"
+				"bzz-raw://0ee47228ddbdabd8ba361d2f39c06d5f0e07fa21b92c56c7f75e595c1bdb9ce1",
+				"dweb:/ipfs/Qmc6NxgNTrp23rFx8ukCUi46uqLSWxrvQ9rQJmHJ6FKui9"
 			]
 		}
 	},
