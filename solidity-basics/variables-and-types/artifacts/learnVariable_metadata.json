@@ -1,0 +1,59 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "storeOwner",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"solidity-basics/variables-and-types/variables-and-types.sol": "learnVariable"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"solidity-basics/variables-and-types/variables-and-types.sol": {
+			"keccak256": "0x4ea79e191fd9137a5c2078ef2519b81f9346b9daa437cf95e814e926f260ec5a",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://4345e7e878cff96445604f36e0b94d30b8060f95967661c0c0350d1fddf33599",
+				"dweb:/ipfs/Qma6HabMJG6GMhxtaGySJqcLjdt2uVMkbmsR3C5W3KrXdd"
+			]
+		}
+	},
+	"version": 1
+}
