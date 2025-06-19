@@ -1,0 +1,66 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "calculator",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "compare",
+				"outputs": [],
+				"stateMutability": "pure",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"solidity-basics/operators/operators.sol": "LearnOperators"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"solidity-basics/operators/operators.sol": {
+			"keccak256": "0x44bb4c5899072ecd9b6f79a0237092008070639ffc7dfb7c27ebb29f76abcf14",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://4c481b814418498e7389f47e292f5c6ebb9fc99b1a8f2faf70fde35febe68292",
+				"dweb:/ipfs/QmWGevvRDjFte9wrnsCkwM1V9Ad2H34yShbDFHSeeQwfpQ"
+			]
+		}
+	},
+	"version": 1
+}
