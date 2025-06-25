@@ -1,0 +1,45 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"solidity-basics/solconstructors/learnconstructor.sol": "learnconstructor"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"solidity-basics/solconstructors/learnconstructor.sol": {
+			"keccak256": "0x6e5fbf3950007fd74cb952d0f7e9f9292fcb59281723771c8031a177bb2a78be",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ac9a3043ccd46efd5573957afd1eb40e89014b48c697fc9a60b95ce1ecdf0c16",
+				"dweb:/ipfs/QmTUkd9LaNAMQGbHPJiC7DjmSuQPBmUdd6Rt5GMakMbPY7"
+			]
+		}
+	},
+	"version": 1
+}

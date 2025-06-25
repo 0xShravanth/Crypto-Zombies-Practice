@@ -1,0 +1,62 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_age",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"solidity-basics/solconstructors/learnconstructor.sol": "member"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"solidity-basics/solconstructors/learnconstructor.sol": {
+			"keccak256": "0xdc31cc1221b994faf54e5b74e41b56ea90c841fa8251b6f26247811d5588f459",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1d683e9f4c4a122cdc62193bfc6b233a99bdbefa40c932a68ca57927d3b33adf",
+				"dweb:/ipfs/QmR5zznAchQtvKvY4wbNqpYg7nAp9Ps9r5BFmgaRvX8pwa"
+			]
+		}
+	},
+	"version": 1
+}

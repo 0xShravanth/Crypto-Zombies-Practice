@@ -1,0 +1,59 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "getName",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"solidity-basics/solconstructors/learnconstructor.sol": "Teacher"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"solidity-basics/solconstructors/learnconstructor.sol": {
+			"keccak256": "0xdd10129b132800dcbf843f81248e400916731e022a34ebbb5bd8e9985fcc1a9b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://c60efa19cb2c35f1d416048f4a824fc961b3c9a53a91b638ba37cbd14f8d68df",
+				"dweb:/ipfs/QmPbQ2RyzDAPicSgZWRiig2yNfHU41enpkuEtxJF45QLpA"
+			]
+		}
+	},
+	"version": 1
+}
