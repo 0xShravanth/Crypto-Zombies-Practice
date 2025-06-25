@@ -54,11 +54,11 @@
 	},
 	"sources": {
 		"solidity-basics/operators/operators.sol": {
-			"keccak256": "0x44bb4c5899072ecd9b6f79a0237092008070639ffc7dfb7c27ebb29f76abcf14",
+			"keccak256": "0xb4e01d61c630a092881bab412fdcdec30ed88fbfaee9a3101eb6d35865975d2d",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://4c481b814418498e7389f47e292f5c6ebb9fc99b1a8f2faf70fde35febe68292",
-				"dweb:/ipfs/QmWGevvRDjFte9wrnsCkwM1V9Ad2H34yShbDFHSeeQwfpQ"
+				"bzz-raw://d812202edfe1736d21ee617888a7240ee160cb510aab28f20f22e8084bf66469",
+				"dweb:/ipfs/QmPKLRyrdpu1e8Eu1Zq8ndcewpCYjGYBfGR3srzsyiL7pp"
 			]
 		}
 	},

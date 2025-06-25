@@ -19,7 +19,7 @@ contract LearnOperators  {
         return a + b;
     }
 
-    function compare() public pure {
+    function compare() public pure  {
         uint c = 5;
         uint d =  10;
          bool result = (c > d);
