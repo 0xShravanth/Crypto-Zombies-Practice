@@ -12,7 +12,7 @@ contract Member{
 }
 contract Teacher is Member('sager',24)
  {
-    //onstructor(string memory n, uint a) Member(n, a) public {}
+    //constructor(string memory n, uint a) Member(n, a) public {}
     function getName() public view returns(string memory){
         return name;
     }
