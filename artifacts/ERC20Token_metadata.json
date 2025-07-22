@@ -289,6 +289,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "getCurrentBlockTimestamp",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -548,6 +561,9 @@
 				"constructor": {
 					"notice": "Constructor to initialize name, symbol, cap, and initial supply"
 				},
+				"getCurrentBlockTimestamp()": {
+					"notice": "Get the block timestamp "
+				},
 				"getUnlockTime(address)": {
 					"notice": "Get the unlock timestamp for a user"
 				},
@@ -581,7 +597,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Contract Conqueror/Erc-20/ERC20standard.sol": "BasicToken"
+			"Contract Conqueror/Erc-20/ERC20standard.sol": "ERC20Token"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -596,11 +612,11 @@
 	},
 	"sources": {
 		"Contract Conqueror/Erc-20/ERC20standard.sol": {
-			"keccak256": "0x0a7c23943a46f750f12f760b8a7ac5b7afb4c24c013555462de81dc796e67a0c",
+			"keccak256": "0x000984004eb8627ca67d4f3086a3d1c82e175b247baad071f93b68d72b414a42",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://84856480e06495b62cce70322376573221158bd72eaae991879a688a911e1ea0",
-				"dweb:/ipfs/QmTioQcLVjKSwxyTGC23ypDsANv61gRoBJhfvPg8mBp8uS"
+				"bzz-raw://3a2e4bb8cfc7ede877b9e6a8df3db1607e88341db0c2217d0609f8b25c204b32",
+				"dweb:/ipfs/QmVu7tawnnEaWX9JWY9UKJjjxtyRNFzFhomDkZxN8y8ifw"
 			]
 		}
 	},
