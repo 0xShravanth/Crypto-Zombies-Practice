@@ -61,6 +61,57 @@
 						"type": "address"
 					},
 					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "Burn",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "Mint",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "Paused",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
 						"indexed": true,
 						"internalType": "address",
 						"name": "to",
@@ -74,6 +125,19 @@
 					}
 				],
 				"name": "Transfer",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "Unpaused",
 				"type": "event"
 			},
 			{
@@ -144,6 +208,37 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "burn",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "burnFrom",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "decimals",
 				"outputs": [
@@ -154,6 +249,24 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "mint",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -180,6 +293,13 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "pause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -273,11 +393,36 @@
 				],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "unPause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
 			"kind": "dev",
-			"methods": {},
+			"methods": {
+				"burn(uint256)": {
+					"params": {
+						"amount": "Amount to burn (in smallest unit)"
+					}
+				},
+				"burnFrom(address,uint256)": {
+					"params": {
+						"account": "Address to burn from",
+						"amount": "Amount to burn (in smallest unit)"
+					}
+				},
+				"mint(address,uint256)": {
+					"params": {
+						"amount": "The amount to mint (in whole tokens)",
+						"to": "The address to receive minted tokens"
+					}
+				}
+			},
 			"stateVariables": {
 				"_balances": {
 					"details": "Balances and allowances"
@@ -295,19 +440,31 @@
 			"kind": "user",
 			"methods": {
 				"allowance(address,address)": {
-					"notice": "Get balance of an addressGet allowance from owner to spender"
+					"notice": "Get allowance from owner to spender"
 				},
 				"approve(address,uint256)": {
 					"notice": "Approve a spender"
 				},
 				"balanceOf(address)": {
-					"notice": "Check balance of a specific address"
+					"notice": "Get balance of an address"
+				},
+				"burn(uint256)": {
+					"notice": "Burn tokens from caller's balance"
+				},
+				"burnFrom(address,uint256)": {
+					"notice": "Burn tokens from another account with approval"
 				},
 				"constructor": {
 					"notice": "Constructor to initialize name, symbol, cap, and initial supply"
 				},
+				"mint(address,uint256)": {
+					"notice": "Mint new tokens (only owner, capped)"
+				},
 				"name()": {
 					"notice": "Token details"
+				},
+				"pause()": {
+					"notice": "Pause token transfers and actions"
 				},
 				"totalsupply()": {
 					"notice": "Get max token capGet total token supply"
@@ -317,6 +474,9 @@
 				},
 				"transferFrom(address,address,uint256)": {
 					"notice": "Transfer tokens using allowance"
+				},
+				"unPause()": {
+					"notice": "Unpause token transfers and actions"
 				}
 			},
 			"version": 1
@@ -339,11 +499,11 @@
 	},
 	"sources": {
 		"Contract Conqueror/Erc-20/ERC20standard.sol": {
-			"keccak256": "0xe7c02ed8a689bd104b166462ad7afe367085304a8b610a101ce029b8009aa8af",
+			"keccak256": "0x2e46399643ad06e821d18f72230d851d7e0329999a411d99931f389456d510b5",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://55b1d0fa343431be33ede090dc3fb52e69931cad00a17b2385e5fb2264e49afa",
-				"dweb:/ipfs/QmdKDUkaXuZEvKcVKQgqrYN63MgBonpJ1CZ56Q5ZUhTTAy"
+				"bzz-raw://ed36c0839d73a33224bfe5632d3b045638ce082098b4a4c5104311fb7f6ee0c5",
+				"dweb:/ipfs/QmTRV126HZoa8cznCgxrbYe4WD9mgNCopgknFkAgVZeP4U"
 			]
 		}
 	},
