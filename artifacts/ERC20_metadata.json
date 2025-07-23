@@ -8,22 +8,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "string",
-						"name": "name",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "symbol",
-						"type": "string"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "constructor"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "address",
 						"name": "spender",
 						"type": "address"
@@ -331,6 +315,7 @@
 			}
 		],
 		"devdoc": {
+			"details": "Implementation of the {IERC20} interface. This implementation is agnostic to the way tokens are created. This means that a supply mechanism has to be added in a derived contract using {_mint}. TIP: For a detailed writeup see our guide https://forum.openzeppelin.com/t/how-to-implement-erc20-supply-mechanisms/226[How to implement supply mechanisms]. The default value of {decimals} is 18. To change this, you should override this function so it returns a different value. We have followed general OpenZeppelin Contracts guidelines: functions revert instead returning `false` on failure. This behavior is nonetheless conventional and does not conflict with the expectations of ERC-20 applications.",
 			"errors": {
 				"ERC20InsufficientAllowance(address,uint256,uint256)": [
 					{
@@ -404,6 +389,9 @@
 				"balanceOf(address)": {
 					"details": "Returns the value of tokens owned by `account`."
 				},
+				"constructor": {
+					"details": "Sets the values for {name} and {symbol}. Both values are immutable: they can only be set once during construction."
+				},
 				"decimals()": {
 					"details": "Returns the number of decimals used to get its user representation. For example, if `decimals` equals `2`, a balance of `505` tokens should be displayed to a user as `5.05` (`505 / 10 ** 2`). Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei. This is the default value returned by this function, unless it's overridden. NOTE: This information is only used for _display_ purposes: it in no way affects any of the arithmetic of the contract, including {IERC20-balanceOf} and {IERC20-transfer}."
 				},
@@ -433,7 +421,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Contract Conqueror/Erc-20/Erc20.sol": "MyToken"
+			".deps/npm/@openzeppelin/contracts/token/ERC20/ERC20.sol": "ERC20"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -447,23 +435,15 @@
 		"remappings": []
 	},
 	"sources": {
-		"Contract Conqueror/Erc-20/Erc20.sol": {
-			"keccak256": "0xa78a19882d1517da7cfc06b1c71d7b423d5a42c27da3de0226fc9bc4e9493425",
+		".deps/npm/@openzeppelin/contracts/interfaces/draft-IERC6093.sol": {
+			"keccak256": "0x19fdfb0f3b89a230e7dbd1cf416f1a6b531a3ee5db4da483f946320fc74afc0e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://a058427fb0b1c3fbfa4524848957a0bb3eeb0271cebbf6230946c8ed0d059c9d",
-				"dweb:/ipfs/QmPGznNcQwGNNWokbN5FkJm9urZAueZYkVuEEJwewkKo4D"
+				"bzz-raw://3490d794728f5bfecb46820431adaff71ba374141545ec20b650bb60353fac23",
+				"dweb:/ipfs/QmPsfxjVpMcZbpE7BH93DzTpEaktESigEw4SmDzkXuJ4WR"
 			]
 		},
-		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/interfaces/draft-IERC6093.sol": {
-			"keccak256": "0xa667ad942f67a3a72830ba2db2556b22c94a0d0e7b934cb1af19dbb52c701011",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://a04504e81403d9f3c45593e0e29f928ff93fbcd11ea961aa8cbd96b05f80aa6e",
-				"dweb:/ipfs/QmZtHcvctLMa4Ap1ayqq1kyKt8EN5Ni2851daEdjNNYacG"
-			]
-		},
-		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20.sol": {
+		".deps/npm/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
 			"keccak256": "0x86b7b71a6aedefdad89b607378eeab1dcc5389b9ea7d17346d08af01d7190994",
 			"license": "MIT",
 			"urls": [
@@ -471,7 +451,7 @@
 				"dweb:/ipfs/QmZfqJCKVU1ScuX2A7s8WZdQEaikwJbDH5JBrBdKTUT4Gu"
 			]
 		},
-		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol": {
+		".deps/npm/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
 			"keccak256": "0x74ed01eb66b923d0d0cfe3be84604ac04b76482a55f9dd655e1ef4d367f95bc2",
 			"license": "MIT",
 			"urls": [
@@ -479,7 +459,7 @@
 				"dweb:/ipfs/QmeCfPykghhMc81VJTrHTC7sF6CRvaA1FXVq2pJhwYp1dV"
 			]
 		},
-		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
+		".deps/npm/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
 			"keccak256": "0xd6fa4088198f04eef10c5bce8a2f4d60554b7ec4b987f684393c01bf79b94d9f",
 			"license": "MIT",
 			"urls": [
@@ -487,7 +467,7 @@
 				"dweb:/ipfs/QmSLr6bHkPFWT7ntj34jmwfyskpwo97T9jZUrk5sz3sdtR"
 			]
 		},
-		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Context.sol": {
+		".deps/npm/@openzeppelin/contracts/utils/Context.sol": {
 			"keccak256": "0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2",
 			"license": "MIT",
 			"urls": [
