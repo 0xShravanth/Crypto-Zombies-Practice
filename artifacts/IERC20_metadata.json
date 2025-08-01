@@ -9,11 +9,72 @@
 				"inputs": [
 					{
 						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "spender",
+						"type": "address"
+					}
+				],
+				"name": "allowance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "spender",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "approve",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
 						"name": "account",
 						"type": "address"
 					}
 				],
 				"name": "balanceOf",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalSupply",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -81,13 +142,11 @@
 		"devdoc": {
 			"kind": "dev",
 			"methods": {},
-			"title": "SimpleSwap",
 			"version": 1
 		},
 		"userdoc": {
 			"kind": "user",
 			"methods": {},
-			"notice": "Allows users to swap one ERC20 token for another at a fixed rate",
 			"version": 1
 		}
 	},
@@ -108,11 +167,11 @@
 	},
 	"sources": {
 		"Contract Conqueror/swaptoken/swap.sol": {
-			"keccak256": "0x9782dbe1dbb4c2b65e14868db832a69bf13c2412c29c689999659fde14882eeb",
+			"keccak256": "0x68d75e52febfb10ec1002af3308656633e3267d4a7844683581cde47a74e11a8",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://87ed99f01bf2b0f8ae6f347967234f53e729245bc6583a417223cec7574a083f",
-				"dweb:/ipfs/QmQvCYaHw3jPf57emJ6NnHCpjtgFkgNeD2Fnu3ikPLaj37"
+				"bzz-raw://c6c3cbc7b9a0061d2c27d983b65544d3a65e8fda47c184814165745e9f6fc08b",
+				"dweb:/ipfs/QmefffsKnsDQptcQgFukZQsw25YAjJHxXXRxXu9KRPgtey"
 			]
 		}
 	},

@@ -1,159 +1,350 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.0;
 
-/// @title UnifiedTokenSwap
-/// @notice Combines TokenA, TokenB, and Swap functionality in one contract
+interface IERC20 {
+    function totalSupply() external view returns (uint256);
+    function balanceOf(address account) external view returns (uint256);
+    function transfer(address to, uint256 amount) external returns (bool);
+    function allowance(address owner, address spender) external view returns (uint256);
+    function approve(address spender, uint256 amount) external returns (bool);
+    function transferFrom(address from, address to, uint256 amount) external returns (bool);
+}
 
-contract UnifiedTokenSwap {
-    // ========== Token Structures ==========
-    struct Token {
-        string name;
-        string symbol;
-        uint8 decimals;
-        uint256 totalSupply;
-        mapping(address => uint256) balanceOf;
-        mapping(address => mapping(address => uint256)) allowance;
-    }
+interface ISimpleSwap {
+    function swapTokens(address tokenIn, address tokenOut, uint256 amountIn) external returns (uint256);
+    function getQuote(address tokenIn, address tokenOut, uint256 amountIn) external view returns (uint256);
+}
 
-    Token private tokenA;
-    Token private tokenB;
-
-    // ========== Admin and Swap Variables ==========
+contract StakingRewards {
+    // State variables
     address public owner;
-    uint256 public exchangeRate; // tokenB per tokenA, scaled by 1e18
-
-    // ========== Events ==========
-    event Transfer(address indexed token, address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed token, address indexed owner, address indexed spender, uint256 value);
-    event ExchangeRateUpdated(uint256 newRate);
-    event SwapExecuted(address indexed user, uint256 amountIn, uint256 amountOut);
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-
-    // ========== Modifiers ==========
+    address public stakingToken;
+    address public rewardToken;
+    address public simpleSwap;
+    
+    uint256 public rewardRate; // Rewards per second
+    uint256 public lastUpdateTime;
+    uint256 public rewardPerTokenStored;
+    uint256 public totalStaked;
+    uint256 public rewardsDuration = 7 days; // Default 7 days
+    uint256 public periodFinish;
+    
+    // User mappings
+    mapping(address => uint256) public stakedBalance;
+    mapping(address => uint256) public userRewardPerTokenPaid;
+    mapping(address => uint256) public rewards;
+    mapping(address => uint256) public stakingTime;
+    
+    // Events
+    event Staked(address indexed user, uint256 amount);
+    event Withdrawn(address indexed user, uint256 amount);
+    event RewardPaid(address indexed user, uint256 reward);
+    event RewardAdded(uint256 reward);
+    event RewardsDurationUpdated(uint256 newDuration);
+    event SwappedRewards(address indexed user, uint256 rewardAmount, uint256 swappedAmount);
+    
+    // Errors
+    error Unauthorized();
+    error InvalidAddress();
+    error InvalidAmount();
+    error InsufficientBalance();
+    error TransferFailed();
+    error NoRewards();
+    error RewardPeriodNotFinished();
+    
     modifier onlyOwner() {
-        require(msg.sender == owner, "Not owner");
+        if (msg.sender != owner) revert Unauthorized();
         _;
     }
-
-    // ========== Constructor ==========
-    constructor(uint256 _initialRate) {
-        require(_initialRate > 0, "Invalid rate");
-
+    
+    modifier validAddress(address _addr) {
+        if (_addr == address(0)) revert InvalidAddress();
+        _;
+    }
+    
+    modifier validAmount(uint256 _amount) {
+        if (_amount == 0) revert InvalidAmount();
+        _;
+    }
+    
+    modifier updateReward(address account) {
+        rewardPerTokenStored = rewardPerToken();
+        lastUpdateTime = lastTimeRewardApplicable();
+        
+        if (account != address(0)) {
+            rewards[account] = earned(account);
+            userRewardPerTokenPaid[account] = rewardPerTokenStored;
+        }
+        _;
+    }
+    
+    constructor(
+        address _stakingToken,
+        address _rewardToken,
+        address _simpleSwap,
+        uint256 _rewardRate
+    ) 
+        validAddress(_stakingToken)
+        validAddress(_rewardToken)
+    {
         owner = msg.sender;
-        emit OwnershipTransferred(address(0), msg.sender);
-
-        // Initialize tokens
-        tokenA.name = "TokenA";
-        tokenA.symbol = "TKA";
-        tokenA.decimals = 18;
-
-        tokenB.name = "TokenB";
-        tokenB.symbol = "TKB";
-        tokenB.decimals = 18;
-
-        exchangeRate = _initialRate;
-        emit ExchangeRateUpdated(_initialRate);
+        stakingToken = _stakingToken;
+        rewardToken = _rewardToken;
+        simpleSwap = _simpleSwap;
+        rewardRate = _rewardRate;
     }
-
-    // ========== Token Logic ==========
-    function name(bool isTokenA) external view returns (string memory) {
-        return isTokenA ? tokenA.name : tokenB.name;
+    
+    /**
+     * @dev Returns the last time rewards were applicable
+     */
+    function lastTimeRewardApplicable() public view returns (uint256) {
+        return block.timestamp < periodFinish ? block.timestamp : periodFinish;
     }
-
-    function symbol(bool isTokenA) external view returns (string memory) {
-        return isTokenA ? tokenA.symbol : tokenB.symbol;
+    
+    /**
+     * @dev Calculate reward per token
+     */
+    function rewardPerToken() public view returns (uint256) {
+        if (totalStaked == 0) {
+            return rewardPerTokenStored;
+        }
+        return rewardPerTokenStored + 
+            (((lastTimeRewardApplicable() - lastUpdateTime) * rewardRate * 1e18) / totalStaked);
     }
-
-    function decimals(bool isTokenA) external view returns (uint8) {
-        return isTokenA ? tokenA.decimals : tokenB.decimals;
+    
+    /**
+     * @dev Calculate earned rewards for an account
+     */
+    function earned(address account) public view returns (uint256) {
+        return ((stakedBalance[account] * (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18) + 
+            rewards[account];
     }
-
-    function totalSupply(bool isTokenA) external view returns (uint256) {
-        return isTokenA ? tokenA.totalSupply : tokenB.totalSupply;
+    
+    /**
+     * @dev Get reward for duration
+     */
+    function getRewardForDuration() external view returns (uint256) {
+        return rewardRate * rewardsDuration;
     }
-
-    function balanceOf(bool isTokenA, address user) external view returns (uint256) {
-        return isTokenA ? tokenA.balanceOf[user] : tokenB.balanceOf[user];
+    
+    /**
+     * @dev Stake tokens
+     * @param amount Amount to stake
+     */
+    function stake(uint256 amount) 
+        external 
+        validAmount(amount) 
+        updateReward(msg.sender) 
+    {
+        IERC20 token = IERC20(stakingToken);
+        
+        if (token.balanceOf(msg.sender) < amount) revert InsufficientBalance();
+        if (token.allowance(msg.sender, address(this)) < amount) revert InsufficientBalance();
+        
+        if (!token.transferFrom(msg.sender, address(this), amount)) {
+            revert TransferFailed();
+        }
+        
+        totalStaked += amount;
+        stakedBalance[msg.sender] += amount;
+        stakingTime[msg.sender] = block.timestamp;
+        
+        emit Staked(msg.sender, amount);
     }
-
-    function approve(bool isTokenA, address spender, uint256 amount) external returns (bool) {
-        Token storage token = isTokenA ? tokenA : tokenB;
-        token.allowance[msg.sender][spender] = amount;
-        emit Approval(isTokenA ? address(this) : address(0), msg.sender, spender, amount);
-        return true;
+    
+    /**
+     * @dev Withdraw staked tokens
+     * @param amount Amount to withdraw
+     */
+    function withdraw(uint256 amount) 
+        public 
+        validAmount(amount) 
+        updateReward(msg.sender) 
+    {
+        if (stakedBalance[msg.sender] < amount) revert InsufficientBalance();
+        
+        totalStaked -= amount;
+        stakedBalance[msg.sender] -= amount;
+        
+        if (!IERC20(stakingToken).transfer(msg.sender, amount)) {
+            revert TransferFailed();
+        }
+        
+        emit Withdrawn(msg.sender, amount);
     }
-
-    function allowance(bool isTokenA, address owner_, address spender) external view returns (uint256) {
-        Token storage token = isTokenA ? tokenA : tokenB;
-        return token.allowance[owner_][spender];
+    
+    /**
+     * @dev Claim rewards
+     */
+    function getReward() public  updateReward(msg.sender) {
+        uint256 reward = rewards[msg.sender];
+        if (reward == 0) revert NoRewards();
+        
+        rewards[msg.sender] = 0;
+        
+        if (!IERC20(rewardToken).transfer(msg.sender, reward)) {
+            revert TransferFailed();
+        }
+        
+        emit RewardPaid(msg.sender, reward);
     }
-
-    function transfer(bool isTokenA, address to, uint256 amount) external returns (bool) {
-        Token storage token = isTokenA ? tokenA : tokenB;
-        require(token.balanceOf[msg.sender] >= amount, "Insufficient balance");
-        token.balanceOf[msg.sender] -= amount;
-        token.balanceOf[to] += amount;
-        emit Transfer(isTokenA ? address(this) : address(0), msg.sender, to, amount);
-        return true;
+    
+    /**
+     * @dev Claim rewards and automatically swap to staking token
+     */
+    function getRewardAndSwap() public  updateReward(msg.sender) {
+        uint256 reward = rewards[msg.sender];
+        if (reward == 0) revert NoRewards();
+        if (simpleSwap == address(0)) revert InvalidAddress();
+        
+        rewards[msg.sender] = 0;
+        
+        // Approve SimpleSwap to spend reward tokens
+        if (!IERC20(rewardToken).approve(simpleSwap, reward)) {
+            revert TransferFailed();
+        }
+        
+        // Swap reward tokens for staking tokens
+        uint256 swappedAmount = ISimpleSwap(simpleSwap).swapTokens(
+            rewardToken,
+            stakingToken,
+            reward
+        );
+        
+        emit RewardPaid(msg.sender, reward);
+        emit SwappedRewards(msg.sender, reward, swappedAmount);
     }
-
-    function transferFrom(bool isTokenA, address from, address to, uint256 amount) external returns (bool) {
-        Token storage token = isTokenA ? tokenA : tokenB;
-        require(token.balanceOf[from] >= amount, "Insufficient balance");
-        require(token.allowance[from][msg.sender] >= amount, "Not allowed");
-        token.allowance[from][msg.sender] -= amount;
-        token.balanceOf[from] -= amount;
-        token.balanceOf[to] += amount;
-        emit Transfer(isTokenA ? address(this) : address(0), from, to, amount);
-        return true;
+    
+    /**
+     * @dev Exit - withdraw all staked tokens and claim rewards
+     */
+    function exit() external {
+        withdraw(stakedBalance[msg.sender]);
+        getReward();
     }
-
-    function mint(bool isTokenA, address to, uint256 amount) external onlyOwner {
-        Token storage token = isTokenA ? tokenA : tokenB;
-        token.balanceOf[to] += amount;
-        token.totalSupply += amount;
-        emit Transfer(isTokenA ? address(this) : address(0), address(0), to, amount);
+    
+    // /**
+    //  * @dev Exit and swap - withdraw all staked tokens and swap rewards
+    //  */
+    function exitAndSwap() external {
+        withdraw(stakedBalance[msg.sender]);
+        getRewardAndSwap();
     }
-
-    // ========== Swap Logic ==========
-    function setExchangeRate(uint256 newRate) external onlyOwner {
-        require(newRate > 0, "Zero rate");
-        exchangeRate = newRate;
-        emit ExchangeRateUpdated(newRate);
+    
+    /**
+     * @dev Add rewards to the pool (only owner)
+     * @param reward Amount of reward tokens to add
+     */
+    function notifyRewardAmount(uint256 reward) 
+        external 
+        onlyOwner 
+        validAmount(reward)
+        updateReward(address(0)) 
+    {
+        if (block.timestamp >= periodFinish) {
+            rewardRate = reward / rewardsDuration;
+        } else {
+            uint256 remaining = periodFinish - block.timestamp;
+            uint256 leftover = remaining * rewardRate;
+            rewardRate = (reward + leftover) / rewardsDuration;
+        }
+        
+        // Ensure the provided reward amount is not more than the balance in the contract
+        uint256 balance = IERC20(rewardToken).balanceOf(address(this));
+        if (rewardRate > balance / rewardsDuration) revert InsufficientBalance();
+        
+        lastUpdateTime = block.timestamp;
+        periodFinish = block.timestamp + rewardsDuration;
+        
+        emit RewardAdded(reward);
     }
-
-    function swap(uint256 amountIn) external {
-        require(amountIn > 0, "Zero input");
-
-        // Check allowance and balance
-        require(tokenA.balanceOf[msg.sender] >= amountIn, "Insufficient TokenA");
-        require(tokenA.allowance[msg.sender][address(this)] >= amountIn, "TokenA not approved");
-
-        uint256 amountOut = (amountIn * exchangeRate) / 1e18;
-        require(tokenB.balanceOf[address(this)] >= amountOut, "Insufficient TokenB in contract");
-
-        // Execute swap
-        tokenA.balanceOf[msg.sender] -= amountIn;
-        tokenA.allowance[msg.sender][address(this)] -= amountIn;
-        tokenA.balanceOf[address(this)] += amountIn;
-
-        tokenB.balanceOf[address(this)] -= amountOut;
-        tokenB.balanceOf[msg.sender] += amountOut;
-
-        emit SwapExecuted(msg.sender, amountIn, amountOut);
+    
+    /**
+     * @dev Set rewards duration (only owner)
+     * @param _rewardsDuration New rewards duration in seconds
+     */
+    function setRewardsDuration(uint256 _rewardsDuration) 
+        external 
+        onlyOwner 
+        validAmount(_rewardsDuration)
+    {
+        if (block.timestamp <= periodFinish) revert RewardPeriodNotFinished();
+        
+        rewardsDuration = _rewardsDuration;
+        emit RewardsDurationUpdated(_rewardsDuration);
     }
-
-    // ========== Admin ==========
-    function transferOwnership(address newOwner) external onlyOwner {
-        require(newOwner != address(0), "Zero address");
-        emit OwnershipTransferred(owner, newOwner);
+    
+    /**
+     * @dev Update SimpleSwap address (only owner)
+     * @param _simpleSwap New SimpleSwap address
+     */
+    function setSimpleSwap(address _simpleSwap) external onlyOwner {
+        simpleSwap = _simpleSwap;
+    }
+    
+    /**
+     * @dev Get quote for swapping rewards
+     * @param user User address to check rewards for
+     */
+    function getSwapQuote(address user) external view returns (uint256) {
+        if (simpleSwap == address(0)) return 0;
+        
+        uint256 reward = earned(user);
+        if (reward == 0) return 0;
+        
+        return ISimpleSwap(simpleSwap).getQuote(rewardToken, stakingToken, reward);
+    }
+    
+    /**
+     * @dev Get user staking info
+     * @param user User address
+     */
+    function getUserInfo(address user) 
+        external 
+        view 
+        returns (
+            uint256 staked,
+            uint256 earnedRewards,
+            uint256 stakingDuration,
+            uint256 potentialSwapAmount
+        ) 
+    {
+        staked = stakedBalance[user];
+        earnedRewards = earned(user);
+        stakingDuration = stakingTime[user] > 0 ? block.timestamp - stakingTime[user] : 0;
+        
+        if (simpleSwap != address(0) && earnedRewards > 0) {
+            potentialSwapAmount = ISimpleSwap(simpleSwap).getQuote(
+                rewardToken, 
+                stakingToken, 
+                earnedRewards
+            );
+        }
+    }
+    
+    /**
+     * @dev Transfer ownership
+     * @param newOwner New owner address
+     */
+    function transferOwnership(address newOwner) external onlyOwner validAddress(newOwner) {
         owner = newOwner;
     }
-
-    function withdraw(bool isTokenA, uint256 amount) external onlyOwner {
-        Token storage token = isTokenA ? tokenA : tokenB;
-        require(token.balanceOf[address(this)] >= amount, "Insufficient funds");
-        token.balanceOf[address(this)] -= amount;
-        token.balanceOf[msg.sender] += amount;
+    
+    /**
+     * @dev Emergency withdraw for owner (only when rewards period is finished)
+     * @param token Token address to withdraw
+     * @param amount Amount to withdraw
+     */
+    function emergencyWithdraw(address token, uint256 amount) 
+        external 
+        onlyOwner 
+        validAddress(token)
+        validAmount(amount)
+    {
+        if (block.timestamp < periodFinish) revert RewardPeriodNotFinished();
+        
+        if (!IERC20(token).transfer(owner, amount)) {
+            revert TransferFailed();
+        }
     }
 }
