@@ -8,9 +8,14 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "_swapFee",
-						"type": "uint256"
+						"internalType": "address",
+						"name": "_token0",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_token1",
+						"type": "address"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -18,37 +23,22 @@
 			},
 			{
 				"inputs": [],
-				"name": "InsufficientBalance",
+				"name": "InsufficientInputAmount",
 				"type": "error"
 			},
 			{
 				"inputs": [],
-				"name": "InvalidAmount",
+				"name": "InsufficientLiquidity",
 				"type": "error"
 			},
 			{
 				"inputs": [],
-				"name": "InvalidFee",
-				"type": "error"
-			},
-			{
-				"inputs": [],
-				"name": "InvalidRate",
-				"type": "error"
-			},
-			{
-				"inputs": [],
-				"name": "NotOwner",
+				"name": "NotSupportedPair",
 				"type": "error"
 			},
 			{
 				"inputs": [],
 				"name": "SameToken",
-				"type": "error"
-			},
-			{
-				"inputs": [],
-				"name": "TokenNotSupported",
 				"type": "error"
 			},
 			{
@@ -62,42 +52,29 @@
 					{
 						"indexed": true,
 						"internalType": "address",
-						"name": "tokenA",
-						"type": "address"
-					},
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "tokenB",
+						"name": "provider",
 						"type": "address"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "rate",
-						"type": "uint256"
-					}
-				],
-				"name": "ExchangeRateUpdated",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "oldFee",
+						"name": "amount0",
 						"type": "uint256"
 					},
 					{
 						"indexed": false,
 						"internalType": "uint256",
-						"name": "newFee",
+						"name": "amount1",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "mintedShares",
 						"type": "uint256"
 					}
 				],
-				"name": "FeeUpdated",
+				"name": "LiquidityAdded",
 				"type": "event"
 			},
 			{
@@ -106,64 +83,50 @@
 					{
 						"indexed": true,
 						"internalType": "address",
-						"name": "previousOwner",
+						"name": "provider",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount0",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount1",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "burnedShares",
+						"type": "uint256"
+					}
+				],
+				"name": "LiquidityRemoved",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
 						"type": "address"
 					},
 					{
 						"indexed": true,
 						"internalType": "address",
-						"name": "newOwner",
-						"type": "address"
-					}
-				],
-				"name": "OwnershipTransferred",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "token",
-						"type": "address"
-					}
-				],
-				"name": "TokenAdded",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "token",
-						"type": "address"
-					}
-				],
-				"name": "TokenRemoved",
-				"type": "event"
-			},
-			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "user",
+						"name": "fromToken",
 						"type": "address"
 					},
 					{
 						"indexed": true,
 						"internalType": "address",
-						"name": "tokenIn",
-						"type": "address"
-					},
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "tokenOut",
+						"name": "toToken",
 						"type": "address"
 					},
 					{
@@ -177,27 +140,93 @@
 						"internalType": "uint256",
 						"name": "amountOut",
 						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "fee",
-						"type": "uint256"
 					}
 				],
-				"name": "TokensSwapped",
+				"name": "Swapped",
 				"type": "event"
 			},
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "amount0",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount1",
+						"type": "uint256"
+					}
+				],
+				"name": "addLiquidity",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "minted",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getReserves",
+				"outputs": [
+					{
+						"internalType": "uint112",
+						"name": "r0",
+						"type": "uint112"
+					},
+					{
+						"internalType": "uint112",
+						"name": "r1",
+						"type": "uint112"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "address",
-						"name": "token",
+						"name": "",
 						"type": "address"
 					}
 				],
-				"name": "addToken",
-				"outputs": [],
+				"name": "liquidity",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "share",
+						"type": "uint256"
+					}
+				],
+				"name": "removeLiquidity",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount0",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount1",
+						"type": "uint256"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -205,279 +234,108 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "token",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					}
-				],
-				"name": "emergencyWithdraw",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
+						"name": "fromToken",
 						"type": "address"
 					},
 					{
 						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "exchangeRates",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "token",
-						"type": "address"
-					}
-				],
-				"name": "getContractBalance",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "tokenA",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "tokenB",
-						"type": "address"
-					}
-				],
-				"name": "getExchangeRate",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "tokenIn",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "tokenOut",
+						"name": "toToken",
 						"type": "address"
 					},
 					{
 						"internalType": "uint256",
 						"name": "amountIn",
 						"type": "uint256"
-					}
-				],
-				"name": "getQuote",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "amountOut",
-						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
-						"name": "fee",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "token",
-						"type": "address"
-					}
-				],
-				"name": "isTokenSupported",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "owner",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "token",
-						"type": "address"
-					}
-				],
-				"name": "removeToken",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "tokenA",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "tokenB",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "rate",
-						"type": "uint256"
-					}
-				],
-				"name": "setExchangeRate",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_swapFee",
-						"type": "uint256"
-					}
-				],
-				"name": "setSwapFee",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "supportedTokens",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "swapFee",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "tokenIn",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "tokenOut",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amountIn",
+						"name": "minAmountOut",
 						"type": "uint256"
 					}
 				],
 				"name": "swapTokens",
-				"outputs": [],
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "amountOut",
+						"type": "uint256"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
-				"inputs": [
+				"inputs": [],
+				"name": "token0",
+				"outputs": [
 					{
 						"internalType": "address",
-						"name": "newOwner",
+						"name": "",
 						"type": "address"
 					}
 				],
-				"name": "transferOwnership",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "token1",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalLiquidity",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			}
 		],
 		"devdoc": {
+			"details": "Educational: not audited. Do NOT use as-is in production.",
 			"kind": "dev",
-			"methods": {},
+			"methods": {
+				"swapTokens(address,address,uint256,uint256)": {
+					"params": {
+						"amountIn": "amount of fromToken sent (user must approve first)",
+						"fromToken": "the token the user sends in (must be token0 or token1)",
+						"minAmountOut": "minimum acceptable amountOut (slippage protection)",
+						"toToken": "the token the user wants out"
+					}
+				}
+			},
 			"version": 1
 		},
 		"userdoc": {
 			"kind": "user",
-			"methods": {},
+			"methods": {
+				"addLiquidity(uint256,uint256)": {
+					"notice": "Add liquidity to the pool. Caller must approve tokens beforehand."
+				},
+				"getReserves()": {
+					"notice": "Returns current reserves."
+				},
+				"removeLiquidity(uint256)": {
+					"notice": "Remove liquidity by burning your share."
+				},
+				"swapTokens(address,address,uint256,uint256)": {
+					"notice": "Swap tokens inside the pool."
+				}
+			},
+			"notice": "SimpleSwap: single-pair AMM with basic liquidity shares (LP accounting) and swap function.",
 			"version": 1
 		}
 	},
@@ -498,11 +356,11 @@
 	},
 	"sources": {
 		"Contract Conqueror/swaptoken/swap.sol": {
-			"keccak256": "0xb54ab0df5759d463b9146f2cbe632d0e48f9fa5990c7f93c650debbfe5a40411",
+			"keccak256": "0xb59b2962f0e1fccee349b885cc5e7e289a1ae65556c05371a19cc3d65588548b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://a431aafda73999afad4cf731b352c7f178ef5db1276519da04f791e9b8f70a5c",
-				"dweb:/ipfs/QmaNqikG1GNcCtLu8numW538hgxg1NqaHJi3Zwv8ScdU27"
+				"bzz-raw://3bb29874674459242178e95c88f691af86225a6097e76e253dbed8fcb1c4625b",
+				"dweb:/ipfs/QmcqaTCNC3Tcx9XnhG3GShtqRZ8XhTjP79RraiGNexsYQE"
 			]
 		}
 	},

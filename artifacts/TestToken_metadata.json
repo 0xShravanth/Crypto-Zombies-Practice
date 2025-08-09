@@ -6,6 +6,32 @@
 	"output": {
 		"abi": [
 			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_symbol",
+						"type": "string"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_decimals",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "initialSupply",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
 				"anonymous": false,
 				"inputs": [
 					{
@@ -136,6 +162,50 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "mint",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "name",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "symbol",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "totalSupply",
 				"outputs": [
@@ -203,22 +273,21 @@
 			}
 		],
 		"devdoc": {
-			"author": "...",
+			"details": "Minimal, NOT production-grade. Uses 18 decimals by default.",
 			"kind": "dev",
 			"methods": {},
-			"title": "SimpleSwap — minimal AMM-style swap + liquidity for a single token pair",
 			"version": 1
 		},
 		"userdoc": {
 			"kind": "user",
 			"methods": {},
-			"notice": "Educational Simple AMM that supports adding/removing liquidity and swapping between two ERC20 tokens.",
+			"notice": "Simple ERC20 used for local testing in Remix.",
 			"version": 1
 		}
 	},
 	"settings": {
 		"compilationTarget": {
-			"Contract Conqueror/swaptoken/swap.sol": "IERC20"
+			"Contract Conqueror/swaptoken/swap.sol": "TestToken"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
